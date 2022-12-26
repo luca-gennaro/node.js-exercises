@@ -2,8 +2,6 @@
 
 // Log out the resolved value for each promise and handle any promise rejections in the chain.
 
-const players = ["Joe", "Caroline", "Sabrina"]
-
 function luckyDraw(player) {
   return new Promise((resolve, reject) => {
     const win = Boolean(Math.round(Math.random()));
@@ -18,7 +16,7 @@ function luckyDraw(player) {
   });
 }
 
-players.forEach(person=>{
-    luckyDraw(person).then(result=> console.log(result))
-    .catch(error=> console.error(error))
-})
+luckyDraw("Joe").then(result => console.log(result))
+.then(()=>luckyDraw("Caroline")).then(result => console.log(result))
+.then(()=>luckyDraw("Sabrina")).then(result => console.log(result))
+.catch(error => console.error(error))
