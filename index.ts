@@ -10,7 +10,14 @@ app.get("/planets", async (request, response) => {
     response.json(planets)
 })
 app.post("/planets", async (request, response) => {
-    const planet = await request.body
+    const { name, diameter, moons} = request.body
+    const planet = await prisma.planet.create({
+        data: {
+            name,
+            diameter,
+            moons
+        }
+    })
     response.json(planet)
 })
 
