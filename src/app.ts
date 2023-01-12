@@ -6,6 +6,13 @@ const corsOption = {
     origin: "http://localhost:8080"
 }
 
+import { 
+    validate,
+    validationErrorMiddleware,
+    planetSchema,
+    PlanetData
+} from "./lib/validation"
+
 const app = express()
 const prisma = new PrismaClient()
 app.use(express.json())
@@ -32,17 +39,17 @@ app.get("/planets/:id", async (request, response) => {
 
 // POST
 
-app.post("/planets", async (request, response) => {
-    const { name, diameter, moons} = request.body
+app.post("/planets", validate({body: planetSchema}),  async (request, response) => {
+    const planetData: PlanetData = request.body;
+
     const planet = await prisma.planet.create({
-        data: {
-            name,
-            diameter,
-            moons
-        }
+        data: planetData
     })
+
     response.json(planet)
 })
+
+app.use(validationErrorMiddleware)
 
 // PUT
 
