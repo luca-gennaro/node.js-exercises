@@ -13,6 +13,10 @@ import {
     PlanetData
 } from "./lib/validation"
 
+import { initMulterMiddleware } from "./lib/middleware/multer"
+
+const upload = initMulterMiddleware()
+
 const app = express()
 const prisma = new PrismaClient()
 app.use(express.json())
@@ -79,6 +83,15 @@ app.delete("/planets/:id", async (request, response) => {
         }
     })
     response.json(planet)
+})
+
+app.post("/planets/:id/photo", 
+upload.single("photo"), 
+async (request, response) => {
+    console.log("request.file", request.file)
+
+    const photoFilename = request.file?.filename
+    response.json({photoFilename})
 })
 
 
