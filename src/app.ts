@@ -1,6 +1,10 @@
 import express from "express"
 import cors from "cors"
+
 import {validationErrorMiddleware} from "./lib/validation"
+import { initSessionMiddleware } from "./lib/middleware/session"
+import {passport} from "./lib/middleware/passport"
+
 import planetsRouters from "./routes/planets"
 
 const corsOption = {
@@ -9,6 +13,9 @@ const corsOption = {
 
 const app = express()
 
+app.use(initSessionMiddleware())
+app.use(passport.initialize())
+app.use(passport.session())
 app.use(express.json())
 app.use(cors(corsOption))
 app.use(validationErrorMiddleware)
