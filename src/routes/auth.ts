@@ -1,4 +1,4 @@
-import { response, Router } from "express";
+import { Router } from "express";
 import  {passport} from "../lib/middleware/passport"
 
 const router = Router()
@@ -8,17 +8,17 @@ router.get("/login", (req, res, next) => {
         res.status(400)
         return next("Missing redirectTo query string parameter")
     }
-
+//@ts-ignore
     req.session.redirectTo = req.query.redirectTo
 
     res.redirect("/auth/github/login")
 } )
 
 router.get(
-    "/auth/github/login",
+    "/github/login",
     passport.authenticate("github", {
         scope: ["user:email"]
-    })
+    }) 
 )
 
 router.get(
@@ -29,9 +29,11 @@ router.get(
         keepSessionInfo: true
     }),
     (req, res) => {
+        //@ts-ignore
         if(typeof req.session.redirectTo !== "string"){
             return res.status(500).end()
         }
+        //@ts-ignore
         res.redirect(req.session.redirectTo)
     }
 )
@@ -48,7 +50,7 @@ router.get("/logout", (req, res, next) => {
         if(error){
         return next(error)
     }
-    response.redirect(redirectUrl)
+    res.redirect(redirectUrl)
     })
 } )
 
